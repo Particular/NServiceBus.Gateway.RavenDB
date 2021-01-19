@@ -1,13 +1,12 @@
-﻿using NServiceBus.AcceptanceTesting.Support;
-using NServiceBus.Configuration.AdvancedExtensibility;
-using Raven.Client.Documents;
-using Raven.Client.ServerWide;
-using Raven.Client.ServerWide.Operations;
-using System;
-using System.Threading.Tasks;
-
-namespace NServiceBus.Gateway.AcceptanceTests
+﻿namespace NServiceBus.Gateway.AcceptanceTests
 {
+    using NServiceBus.AcceptanceTesting.Support;
+    using NServiceBus.Configuration.AdvancedExtensibility;
+    using Raven.Client.Documents;
+    using Raven.Client.ServerWide;
+    using Raven.Client.ServerWide.Operations;
+    using System;
+    using System.Threading.Tasks;
     using System.Collections.Generic;
     using System.Threading;
 
