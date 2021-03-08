@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NServiceBus" Version="8.0.0-alpha.852" />
+    <PackageReference Include="NServiceBus" Version="8.0.0-alpha.881" />
     <PackageReference Include="NServiceBus.Gateway" Version="4.0.0-alpha.176" />
     <PackageReference Include="Particular.Approvals" Version="0.2.0" />
     <PackageReference Include="PublicApiGenerator" Version="10.2.0" />
