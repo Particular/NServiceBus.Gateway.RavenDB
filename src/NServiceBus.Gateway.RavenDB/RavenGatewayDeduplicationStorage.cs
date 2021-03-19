@@ -1,9 +1,10 @@
 ﻿namespace NServiceBus.Gateway.RavenDB
 {
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Extensibility;
     using Raven.Client.Documents;
-    using System;
-    using System.Threading.Tasks;
 
     class RavenGatewayDeduplicationStorage : IGatewayDeduplicationStorage
     {
@@ -15,10 +16,10 @@
 
         public bool SupportsDistributedTransactions => false;
 
-        public async Task<IDeduplicationSession> CheckForDuplicate(string messageId, ContextBag context)
+        public async Task<IDeduplicationSession> CheckForDuplicate(string messageId, ContextBag context, CancellationToken cancellationToken = default)
         {
             var session = documentStore.OpenAsyncSession();
-            var isDuplicate = await session.LoadAsync<GatewayMessage>(MessageIdHelper.EscapeMessageId(messageId)).ConfigureAwait(false) != null;
+            var isDuplicate = await session.LoadAsync<GatewayMessage>(MessageIdHelper.EscapeMessageId(messageId), cancellationToken).ConfigureAwait(false) != null;
 
             return new RavenDeduplicationSession(session, isDuplicate, messageId, deduplicationDataTimeToLive);
         }

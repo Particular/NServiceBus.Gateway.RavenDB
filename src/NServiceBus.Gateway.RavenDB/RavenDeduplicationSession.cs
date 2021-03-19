@@ -1,15 +1,16 @@
 ﻿namespace NServiceBus.Gateway.RavenDB
 {
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Raven.Client;
     using Raven.Client.Documents.Session;
-    using System;
-    using System.Threading.Tasks;
 
     sealed class RavenDeduplicationSession : IDeduplicationSession
     {
         public bool IsDuplicate { get; }
 
-        public async Task MarkAsDispatched()
+        public async Task MarkAsDispatched(CancellationToken cancellationToken = default)
         {
             if (!IsDuplicate)
             {
@@ -22,9 +23,9 @@
                     TimeReceived = timeReceived
                 };
 
-                await session.StoreAsync(gatewayMessage).ConfigureAwait(false);
+                await session.StoreAsync(gatewayMessage, cancellationToken).ConfigureAwait(false);
                 session.Advanced.GetMetadataFor(gatewayMessage)[Constants.Documents.Metadata.Expires] = expiry;
-                await session.SaveChangesAsync().ConfigureAwait(false);
+                await session.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             }
         }
 
