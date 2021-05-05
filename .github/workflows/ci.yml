@@ -80,7 +80,7 @@ jobs:
           $dateTag = "Created=$(Get-Date -Format "yyyy-MM-dd")"
           $ignore = az tag create --resource-id $details.id --tags Package=Gateway.RavenDB RunnerOS=${{ runner.os }} $dateTag
 
-          echo "CommaSeparatedRavenClusterUrls=http://$fqdn:8080" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
+          echo "CommaSeparatedRavenClusterUrls=http://$($fqdn):8080" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf-8 -Append
       - name: Run Windows tests
         if: matrix.name == 'Windows'
         run: dotnet test src --configuration Release --no-build --logger "GitHubActions;report-warnings=false"
