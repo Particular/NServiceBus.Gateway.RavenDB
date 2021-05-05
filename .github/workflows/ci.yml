@@ -86,7 +86,7 @@ jobs:
       - name: Run Linux tests
         if: runner.os == 'Linux'
         run: dotnet test src --configuration Release --no-build --framework netcoreapp3.1 --logger "GitHubActions;report-warnings=false"
-      - name: Teardown SQL Server
+      - name: Teardown RavenDB
         if: ${{ always() }}
         shell: pwsh
         run: |
