@@ -16,7 +16,7 @@
         /// <summary>
         /// Initialize a new instance of the RavenDB gateway deduplication configuration
         /// </summary>
-        public RavenGatewayDeduplicationConfiguration(Func<IServiceProvider, ReadOnlySettings, IDocumentStore> documentStoreFactory)
+        public RavenGatewayDeduplicationConfiguration(Func<IServiceProvider, IReadOnlySettings, IDocumentStore> documentStoreFactory)
         {
             Guard.AgainstNull(nameof(documentStoreFactory), documentStoreFactory);
 
@@ -24,7 +24,7 @@
         }
 
         /// <inheritdoc />
-        public override void Setup(ReadOnlySettings settings)
+        public override void Setup(IReadOnlySettings settings)
         {
             this.settings = settings;
 
@@ -78,7 +78,7 @@
         /// </summary>
         public long FrequencyToRunDeduplicationDataCleanup { get; set; } = 600;
 
-        ReadOnlySettings settings;
-        readonly Func<IServiceProvider, ReadOnlySettings, IDocumentStore> documentStoreFactory;
+        IReadOnlySettings settings;
+        readonly Func<IServiceProvider, IReadOnlySettings, IDocumentStore> documentStoreFactory;
     }
 }
