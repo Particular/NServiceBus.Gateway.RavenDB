@@ -8,6 +8,7 @@
     using System;
     using System.Threading.Tasks;
     using System.Collections.Generic;
+    using System.Net.Http;
     using System.Threading;
 
     public partial class GatewayTestSuiteConstraints
@@ -19,7 +20,18 @@
                 var databaseName = Guid.NewGuid().ToString();
                 var documentStore = GetInitializedDocumentStore(databaseName);
 
-                documentStore.Maintenance.Server.Send(new CreateDatabaseOperation(new DatabaseRecord(databaseName)));
+                for (var i = 0; i < 3; i++)
+                {
+                    try
+                    {
+                        documentStore.Maintenance.Server.Send(new CreateDatabaseOperation(new DatabaseRecord(databaseName)));
+                        break;
+                    }
+                    catch (HttpRequestException)
+                    {
+                        // Usually, Failed to retrieve cluster topology from all known nodes
+                    }
+                }
 
                 try
                 {
