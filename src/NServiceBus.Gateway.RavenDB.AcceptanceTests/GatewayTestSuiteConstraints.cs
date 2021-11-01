@@ -1,14 +1,14 @@
 ﻿namespace NServiceBus.Gateway.AcceptanceTests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
     using NServiceBus.AcceptanceTesting.Support;
     using NServiceBus.Configuration.AdvancedExtensibility;
     using Raven.Client.Documents;
     using Raven.Client.ServerWide;
     using Raven.Client.ServerWide.Operations;
-    using System;
-    using System.Threading.Tasks;
-    using System.Collections.Generic;
-    using System.Threading;
 
     public partial class GatewayTestSuiteConstraints
     {
@@ -19,7 +19,18 @@
                 var databaseName = Guid.NewGuid().ToString();
                 var documentStore = GetInitializedDocumentStore(databaseName);
 
-                documentStore.Maintenance.Server.Send(new CreateDatabaseOperation(new DatabaseRecord(databaseName)));
+                for (var i = 0; i < 3; i++)
+                {
+                    try
+                    {
+                        documentStore.Maintenance.Server.Send(new CreateDatabaseOperation(new DatabaseRecord(databaseName)));
+                        break;
+                    }
+                    catch (AggregateException)
+                    {
+                        // Usually, Failed to retrieve cluster topology from all known nodes
+                    }
+                }
 
                 try
                 {
