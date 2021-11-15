@@ -36,10 +36,14 @@
         {
             var documentStore = documentStoreFactory(builder, settings);
 
-            EnsureClusterConfiguration(documentStore);
+            if (DisableClusterWideTransactions)
+            {
+                // Currently do not support running without cluister-wide TX and clusters with more than one node.
+                EnsureClusterConfiguration(documentStore);
+            }
             EnableExpirationFeature(documentStore, FrequencyToRunDeduplicationDataCleanup);
 
-            return new RavenGatewayDeduplicationStorage(documentStore, DeduplicationDataTimeToLive);
+            return new RavenGatewayDeduplicationStorage(documentStore, DeduplicationDataTimeToLive, !DisableClusterWideTransactions);
         }
 
         static void EnableExpirationFeature(IDocumentStore documentStore, long frequencyToRunDeduplicationDataCleanup)
@@ -55,13 +59,10 @@
         {
             using (var s = store.OpenSession())
             {
-                var getTopologyCmd = new GetClusterTopologyCommand();
+                var getTopologyCmd = new GetDatabaseTopologyCommand();
                 s.Advanced.RequestExecutor.Execute(getTopologyCmd, s.Advanced.Context);
 
-                var topology = getTopologyCmd.Result.Topology;
-
-                // Currently do not support clusters with more than one possible primary member. Watchers (passive replication targets) are OK.
-                if (topology.Members.Count != 1)
+                if (getTopologyCmd.Result.Nodes.Count != 1)
                 {
                     throw new InvalidOperationException("RavenDB Persistence does not support RavenDB clusters with more than one Leader/Member node. Only clusters with a single Leader and (optionally) Watcher nodes are supported.");
                 }
@@ -77,6 +78,12 @@
         /// Frequency, in seconds, at which to run the cleanup of deduplication data.
         /// </summary>
         public long FrequencyToRunDeduplicationDataCleanup { get; set; } = 600;
+
+        /// <summary>
+        /// Disables Cluster-wide transactions support to improve performance when runing against a single node.
+        /// Cluster-wide transactions cannot be disabled when runnign agains a cluster with more than one node.
+        /// </summary>
+        public bool DisableClusterWideTransactions { get; set; }
 
         IReadOnlySettings settings;
         readonly Func<IServiceProvider, IReadOnlySettings, IDocumentStore> documentStoreFactory;
