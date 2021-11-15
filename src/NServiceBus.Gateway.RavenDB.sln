@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29613.14
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NServiceBus.Gateway.RavenDB", "NServiceBus.Gateway.RavenDB\NServiceBus.Gateway.RavenDB.csproj", "{7B24118B-16F2-4B66-9CBC-887030428B04}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NServiceBus.Gateway.RavenDB.AcceptanceTests", "NServiceBus.Gateway.RavenDB.AcceptanceTests\NServiceBus.Gateway.RavenDB.AcceptanceTests.csproj", "{7ADB5C0D-1C66-4270-90A6-10E90AD5781E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NServiceBus.Gateway.RavenDB.Tests", "NServiceBus.Gateway.RavenDB.Tests\NServiceBus.Gateway.RavenDB.Tests.csproj", "{975E7C1E-C0C4-40AD-AEF8-B588B63EA1C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NServiceBus.Gateway.RavenDB.Tests", "NServiceBus.Gateway.RavenDB.Tests\NServiceBus.Gateway.RavenDB.Tests.csproj", "{975E7C1E-C0C4-40AD-AEF8-B588B63EA1C7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NServiceBus.Gateway.RavenDB.ClusterWideTx.AcceptanceTests", "NServiceBus.Gateway.RavenDB.ClusterWideTx.AcceptanceTests\NServiceBus.Gateway.RavenDB.ClusterWideTx.AcceptanceTests.csproj", "{8D78316A-2180-40F0-BF4D-A8CDDC2B2FC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{975E7C1E-C0C4-40AD-AEF8-B588B63EA1C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{975E7C1E-C0C4-40AD-AEF8-B588B63EA1C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{975E7C1E-C0C4-40AD-AEF8-B588B63EA1C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D78316A-2180-40F0-BF4D-A8CDDC2B2FC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D78316A-2180-40F0-BF4D-A8CDDC2B2FC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D78316A-2180-40F0-BF4D-A8CDDC2B2FC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D78316A-2180-40F0-BF4D-A8CDDC2B2FC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
