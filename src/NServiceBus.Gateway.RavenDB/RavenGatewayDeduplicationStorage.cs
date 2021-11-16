@@ -26,6 +26,10 @@
             };
 
             var session = documentStore.OpenAsyncSession(options);
+
+            // Optimistic concurrency is incompatible with cluster-wide transactions
+            session.Advanced.UseOptimisticConcurrency = !useClusterWideTransactions;
+
             var isDuplicate = await session.LoadAsync<GatewayMessage>(MessageIdHelper.EscapeMessageId(messageId), cancellationToken).ConfigureAwait(false) != null;
 
             return new RavenDeduplicationSession(session, isDuplicate, messageId, deduplicationDataTimeToLive);
