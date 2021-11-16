@@ -4,6 +4,7 @@ namespace NServiceBus
     {
         public RavenGatewayDeduplicationConfiguration(System.Func<System.IServiceProvider, NServiceBus.Settings.IReadOnlySettings, Raven.Client.Documents.IDocumentStore> documentStoreFactory) { }
         public System.TimeSpan DeduplicationDataTimeToLive { get; set; }
+        public bool DisableClusterWideTransactions { get; set; }
         public long FrequencyToRunDeduplicationDataCleanup { get; set; }
         public override NServiceBus.Gateway.IGatewayDeduplicationStorage CreateStorage(System.IServiceProvider builder) { }
         public override void Setup(NServiceBus.Settings.IReadOnlySettings settings) { }
