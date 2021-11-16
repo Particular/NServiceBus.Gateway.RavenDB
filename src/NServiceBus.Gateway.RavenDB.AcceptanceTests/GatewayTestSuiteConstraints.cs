@@ -89,15 +89,15 @@
 
         static DocumentStore GetInitializedDocumentStore(string defaultDatabase)
         {
-            var urls = Environment.GetEnvironmentVariable("CommaSeparatedRavenClusterUrls");
-            if (urls == null)
+            var url = Environment.GetEnvironmentVariable("RavenSingleNodeUrl");
+            if (url == null)
             {
-                throw new Exception("RavenDB cluster URLs must be specified in an environment variable named CommaSeparatedRavenClusterUrls.");
+                throw new Exception("RavenDB URL must be specified in an environment variable named RavenSingleNodeUrl.");
             }
 
             var documentStore = new DocumentStore
             {
-                Urls = urls.Split(','),
+                Urls = new[] { url },
                 Database = defaultDatabase
             };
 
