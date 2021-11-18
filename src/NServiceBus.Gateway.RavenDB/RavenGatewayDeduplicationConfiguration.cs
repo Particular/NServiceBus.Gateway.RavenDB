@@ -7,6 +7,7 @@
     using Raven.Client.ServerWide.Commands;
     using Settings;
     using System;
+    using Raven.Client.ServerWide.Operations;
 
     /// <summary>
     /// Configures the deduplication storage.
@@ -36,6 +37,7 @@
         {
             var documentStore = documentStoreFactory(builder, settings);
 
+            EnsureCompatibleServerVersion(documentStore);
             EnsureClusterConfiguration(documentStore);
             EnableExpirationFeature(documentStore, FrequencyToRunDeduplicationDataCleanup);
 
@@ -62,6 +64,22 @@
                 {
                     throw new InvalidOperationException("The RavenDB cluster contains multiple nodes. To safely operate in multi-node environments, enable cluster-wide transactions.");
                 }
+            }
+        }
+
+        void EnsureCompatibleServerVersion(IDocumentStore documentStore)
+        {
+            var requiredVersion = new Version(5, 2);
+            var serverVersion = documentStore.Maintenance.Server.Send(new GetBuildNumberOperation());
+            var fullVersion = new Version(serverVersion.FullVersion);
+
+            if (fullVersion.Major < requiredVersion.Major)
+            {
+                throw new Exception("The RavenDB persistence requires RavenDB server 5.2 or higher");
+            }
+            if (fullVersion.Major == requiredVersion.Major && fullVersion.Minor < requiredVersion.Minor)
+            {
+                throw new Exception("The RavenDB persistence requires RavenDB server 5.2 or higher");
             }
         }
 
