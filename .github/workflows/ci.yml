@@ -103,7 +103,7 @@ jobs:
 
           echo "::set-output name=prefix::$prefix"
 
-          $fqdnRavenDB = @ { singlenode = ""; leader = ""; follower1 = ""; follower2 = "" } 
+          $fqdnRavenDB = @{ singlenode = ""; leader = ""; follower1 = ""; follower2 = "" } 
 
           $NewRavenDBNodeDef = $function:NewRavenDBNode.ToString()
 
