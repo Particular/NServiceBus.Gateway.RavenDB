@@ -96,14 +96,8 @@ jobs:
           } While($tcpClient.Connected -ne "True")
           echo "Connection verified"
           
-      - name: Run Windows tests
-        if: runner.os == 'Windows'
-        run: dotnet test src --configuration Release --no-build --logger "GitHubActions;report-warnings=false"
-      - name: Run Linux tests
-        if: runner.os == 'Linux'
-        run: |
-          dotnet test src --configuration Release --no-build --framework netcoreapp3.1 --logger "GitHubActions;report-warnings=false"
-          dotnet test src --configuration Release --no-build --framework net5.0 --logger "GitHubActions;report-warnings=false"
+      - name: Run tests
+        uses: Particular/run-tests-action@v1.0.0
       - name: Teardown RavenDB
         if: ${{ always() }}
         uses: Azure/powershell@v1
