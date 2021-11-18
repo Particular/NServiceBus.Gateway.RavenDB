@@ -36,14 +36,14 @@
         {
             var documentStore = documentStoreFactory(builder, settings);
 
-            if (DisableClusterWideTransactions)
+            if (!EnableClusterWideTransactions)
             {
                 // Currently do not support running without cluister-wide TX and clusters with more than one node.
                 EnsureClusterConfiguration(documentStore);
             }
             EnableExpirationFeature(documentStore, FrequencyToRunDeduplicationDataCleanup);
 
-            return new RavenGatewayDeduplicationStorage(documentStore, DeduplicationDataTimeToLive, !DisableClusterWideTransactions);
+            return new RavenGatewayDeduplicationStorage(documentStore, DeduplicationDataTimeToLive, EnableClusterWideTransactions);
         }
 
         static void EnableExpirationFeature(IDocumentStore documentStore, long frequencyToRunDeduplicationDataCleanup)
@@ -80,10 +80,10 @@
         public long FrequencyToRunDeduplicationDataCleanup { get; set; } = 600;
 
         /// <summary>
-        /// Disables Cluster-wide transactions support to improve performance when runing against a single node.
-        /// Cluster-wide transactions cannot be disabled when runnign agains a cluster with more than one node.
+        /// Enables Cluster-wide transactions support. Cluster-wide transactions must 
+        /// be enabled when running against a cluster with more than one node.
         /// </summary>
-        public bool DisableClusterWideTransactions { get; set; }
+        public bool EnableClusterWideTransactions { get; set; }
 
         IReadOnlySettings settings;
         readonly Func<IServiceProvider, IReadOnlySettings, IDocumentStore> documentStoreFactory;

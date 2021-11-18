@@ -32,7 +32,10 @@
                 }
 
                 return documentStore;
-            });
+            })
+            {
+                EnableClusterWideTransactions = true
+            };
 
             var gatewaySettings = configuration.Gateway(ravenGatewayDeduplicationConfiguration);
             configuration.GetSettings().Set(gatewaySettings);
