@@ -90,10 +90,10 @@ jobs:
               # echo will mess up the return value
               Write-Debug "Tagging container image"
               $dateTag = "Created=$(Get-Date -Format "yyyy-MM-dd")"
-              $ignore = az tag create --resource-id $details.id --tags Package=RavenGatewayPersistence RunnerOS=$runnerOs Commit=$commit $dateTag
+              $ignore = az tag create --resource-id $details.id --tags Package=RavenPersistence RunnerOS=$runnerOs Commit=$commit $dateTag
               return $details.ipAddress.fqdn
           }
-          $prefix = "psw-ravendb-gateway-$(Get-Random)"
+          $prefix = "psw-ravendb-$(Get-Random)"
           echo "::set-output name=prefix::$prefix"
           $fqdnRavenDB = @(0, 1, 2, 3)
           $NewRavenDBNodeDef = $function:NewRavenDBNode.ToString()
