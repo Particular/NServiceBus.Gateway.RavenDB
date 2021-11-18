@@ -117,7 +117,8 @@ jobs:
           }
 
           @($fqdnRavenDB.keys) | ForEach-Object -Parallel {
-              echo "::add-mask::$fqdnRavenDB[$_]"
+              $hashTable = $using:fqdnRavenDB;
+              echo "::add-mask::$hashTable[$_]"
               $tcpClient = New-Object Net.Sockets.TcpClient
               echo "Verifying connection $_"
               do
@@ -125,7 +126,7 @@ jobs:
                   try
                   {
                       echo "Trying to connect to $_"
-                      $tcpClient.Connect($fqdnRavenDB[$_], 8080)
+                      $tcpClient.Connect($hashTable[$_], 8080)
                       echo "Connection to $_ successful"
                   } catch 
                   {
