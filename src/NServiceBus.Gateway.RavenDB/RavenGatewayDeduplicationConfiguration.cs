@@ -56,11 +56,11 @@
         {
             using (var s = store.OpenSession())
             {
-                var getTopologyCmd = new GetDatabaseTopologyCommand();
+                var getTopologyCmd = new GetClusterTopologyCommand();
                 s.Advanced.RequestExecutor.Execute(getTopologyCmd, s.Advanced.Context);
 
                 // Currently do not support clusters.
-                if (getTopologyCmd.Result.Nodes.Count != 1)
+                if (getTopologyCmd.Result.Topology.AllNodes.Count != 1)
                 {
                     throw new InvalidOperationException("RavenDB Persistence does not support database groups with multiple database nodes. Only single-node configurations are supported.");
                 }
