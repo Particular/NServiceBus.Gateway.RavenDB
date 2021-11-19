@@ -1,14 +1,14 @@
 ﻿namespace NServiceBus.Gateway.AcceptanceTests
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading;
-    using System.Threading.Tasks;
     using NServiceBus.AcceptanceTesting.Support;
     using NServiceBus.Configuration.AdvancedExtensibility;
     using Raven.Client.Documents;
     using Raven.Client.ServerWide;
     using Raven.Client.ServerWide.Operations;
+    using System;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using System.Threading;
 
     public partial class GatewayTestSuiteConstraints
     {
@@ -19,18 +19,7 @@
                 var databaseName = Guid.NewGuid().ToString();
                 var documentStore = GetInitializedDocumentStore(databaseName);
 
-                for (var i = 0; i < 3; i++)
-                {
-                    try
-                    {
-                        documentStore.Maintenance.Server.Send(new CreateDatabaseOperation(new DatabaseRecord(databaseName)));
-                        break;
-                    }
-                    catch (AggregateException)
-                    {
-                        // Usually, Failed to retrieve cluster topology from all known nodes
-                    }
-                }
+                documentStore.Maintenance.Server.Send(new CreateDatabaseOperation(new DatabaseRecord(databaseName)));
 
                 try
                 {
@@ -43,7 +32,10 @@
                 }
 
                 return documentStore;
-            });
+            })
+            {
+                EnableClusterWideTransactions = true
+            };
 
             var gatewaySettings = configuration.Gateway(ravenGatewayDeduplicationConfiguration);
             configuration.GetSettings().Set(gatewaySettings);
@@ -97,15 +89,15 @@
 
         static DocumentStore GetInitializedDocumentStore(string defaultDatabase)
         {
-            var url = Environment.GetEnvironmentVariable("RavenSingleNodeUrl");
-            if (url == null)
+            var urls = Environment.GetEnvironmentVariable("CommaSeparatedRavenClusterUrls");
+            if (urls == null)
             {
-                throw new Exception("RavenDB URL must be specified in an environment variable named RavenSingleNodeUrl.");
+                throw new Exception("RavenDB cluster URLs must be specified in an environment variable named CommaSeparatedRavenClusterUrls.");
             }
 
             var documentStore = new DocumentStore
             {
-                Urls = new[] { url },
+                Urls = urls.Split(','),
                 Database = defaultDatabase
             };
 
