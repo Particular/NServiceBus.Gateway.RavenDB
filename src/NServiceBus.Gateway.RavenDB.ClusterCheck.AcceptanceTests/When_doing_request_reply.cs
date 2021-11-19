@@ -1,10 +1,8 @@
-namespace NServiceBus.Gateway.AcceptanceTests
+﻿namespace NServiceBus.Gateway.AcceptanceTests
 {
     using AcceptanceTesting;
-    using Configuration.AdvancedExtensibility;
     using NUnit.Framework;
     using System;
-    using System.Threading.Tasks;
 
     public class When_running_against_a_cluster : NServiceBusAcceptanceTest
     {
