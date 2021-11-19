@@ -1,4 +1,4 @@
-﻿namespace NServiceBus.Gateway.AcceptanceTests
+namespace NServiceBus.Gateway.AcceptanceTests
 {
     using AcceptanceTesting;
     using Configuration.AdvancedExtensibility;
@@ -9,7 +9,7 @@
     public class When_running_against_a_cluster : NServiceBusAcceptanceTest
     {
         [Test]
-        public void Is_should_throw_when_database_is_repelicated()
+        public void Is_should_throw_when_database_is_replicated()
         {
             Assert.ThrowsAsync<InvalidOperationException>(async () =>
             {
@@ -20,7 +20,7 @@
         }
 
         [Test]
-        public void Is_should_not_throw_when_database_is_not_repelicated()
+        public void Is_should_not_throw_when_database_is_not_replicated()
         {
             Assert.DoesNotThrowAsync(async () =>
             {
