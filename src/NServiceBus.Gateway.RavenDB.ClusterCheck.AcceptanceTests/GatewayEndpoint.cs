@@ -11,7 +11,7 @@
     using System.IO;
     using System.Threading.Tasks;
 
-    public class GatewayEndpoint : IEndpointSetupTemplate
+    public abstract class GatewayEndpoint : IEndpointSetupTemplate
     {
         public Task<EndpointConfiguration> GetConfiguration(RunDescriptor runDescriptor, EndpointCustomizationConfiguration endpointCustomizationConfiguration, Action<EndpointConfiguration> configurationBuilderCustomization)
         {
@@ -37,7 +37,10 @@
                 databaseName = Guid.NewGuid().ToString();
                 var documentStore = GetInitializedDocumentStore(databaseName);
 
-                documentStore.Maintenance.Server.Send(new CreateDatabaseOperation(new DatabaseRecord(databaseName)));
+                var databaseRecord = new DatabaseRecord(databaseName);
+                databaseRecord.Topology = GetDatabaseTopology();
+
+                documentStore.Maintenance.Server.Send(new CreateDatabaseOperation(databaseRecord));
 
                 return documentStore;
             });
@@ -51,6 +54,8 @@
 
             return Task.FromResult(endpointConfiguration);
         }
+
+        protected abstract DatabaseTopology GetDatabaseTopology();
 
         public async Task Cleanup()
         {
