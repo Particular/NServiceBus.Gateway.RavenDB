@@ -40,7 +40,7 @@
             EnsureClusterConfiguration(documentStore);
             EnableExpirationFeature(documentStore, FrequencyToRunDeduplicationDataCleanup);
 
-            return new RavenGatewayDeduplicationStorage(documentStore, DeduplicationDataTimeToLive);
+            return new RavenGatewayDeduplicationStorage(documentStore, DeduplicationDataTimeToLive, EnableClusterWideTransactions);
         }
 
         static void EnableExpirationFeature(IDocumentStore documentStore, long frequencyToRunDeduplicationDataCleanup)
@@ -52,17 +52,16 @@
             }));
         }
 
-        static void EnsureClusterConfiguration(IDocumentStore store)
+        void EnsureClusterConfiguration(IDocumentStore store)
         {
             using (var s = store.OpenSession())
             {
                 var getTopologyCmd = new GetDatabaseTopologyCommand();
                 s.Advanced.RequestExecutor.Execute(getTopologyCmd, s.Advanced.Context);
 
-                // Currently do not support clusters.
-                if (getTopologyCmd.Result.Nodes.Count != 1)
+                if (getTopologyCmd.Result.Nodes.Count > 1 && !EnableClusterWideTransactions)
                 {
-                    throw new Exception("RavenDB Persistence does not support database groups with multiple database nodes. Only single-node configurations are supported.");
+                    throw new InvalidOperationException("The RavenDB cluster contains multiple nodes. To safely operate in multi-node environments, enable cluster-wide transactions.");
                 }
             }
         }
@@ -76,6 +75,12 @@
         /// Frequency, in seconds, at which to run the cleanup of deduplication data.
         /// </summary>
         public long FrequencyToRunDeduplicationDataCleanup { get; set; } = 600;
+
+        /// <summary>
+        /// Enables Cluster-wide transactions support. Cluster-wide transactions must
+        /// be enabled when running against a cluster with more than one node.
+        /// </summary>
+        public bool EnableClusterWideTransactions { get; set; }
 
         ReadOnlySettings settings;
         readonly Func<IBuilder, ReadOnlySettings, IDocumentStore> documentStoreFactory;
