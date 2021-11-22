@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NServiceBus.Gateway.RavenDB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NServiceBus.Gateway.RavenDB.ClusterCheck.AcceptanceTests", "NServiceBus.Gateway.RavenDB.ClusterCheck.AcceptanceTests\NServiceBus.Gateway.RavenDB.ClusterCheck.AcceptanceTests.csproj", "{C5089CD2-FCA3-493C-936D-310F707AC8F3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NServiceBus.Gateway.RavenDB.ClusterWideTx.AcceptanceTests", "NServiceBus.Gateway.RavenDB.ClusterWideTx.AcceptanceTests\NServiceBus.Gateway.RavenDB.ClusterWideTx.AcceptanceTests.csproj", "{5CDF980F-D1F3-49D5-911D-0538368AA041}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{C5089CD2-FCA3-493C-936D-310F707AC8F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5089CD2-FCA3-493C-936D-310F707AC8F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5089CD2-FCA3-493C-936D-310F707AC8F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CDF980F-D1F3-49D5-911D-0538368AA041}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CDF980F-D1F3-49D5-911D-0538368AA041}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CDF980F-D1F3-49D5-911D-0538368AA041}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CDF980F-D1F3-49D5-911D-0538368AA041}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
