@@ -4,6 +4,7 @@ using Raven.Client.Documents;
 using Raven.Client.ServerWide;
 using Raven.Client.ServerWide.Operations;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NServiceBus.Gateway.AcceptanceTests
@@ -17,7 +18,13 @@ namespace NServiceBus.Gateway.AcceptanceTests
                 databaseName = Guid.NewGuid().ToString();
                 var documentStore = GetInitializedDocumentStore(databaseName);
 
-                documentStore.Maintenance.Server.Send(new CreateDatabaseOperation(new DatabaseRecord(databaseName)));
+                var databaseRecord = new DatabaseRecord(databaseName);
+                databaseRecord.Topology = new DatabaseTopology()
+                {
+                    Members = new List<string> { "A", "B", "C" }
+                };
+
+                documentStore.Maintenance.Server.Send(new CreateDatabaseOperation(databaseRecord));
 
                 return documentStore;
             })
