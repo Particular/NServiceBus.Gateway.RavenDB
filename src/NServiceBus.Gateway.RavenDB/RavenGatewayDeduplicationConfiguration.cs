@@ -63,7 +63,7 @@
 
                 if (getTopologyCmd.Result.Nodes.Count > 1 && !EnableClusterWideTransactions)
                 {
-                    throw new InvalidOperationException("The RavenDB cluster contains multiple nodes. To safely operate in multi-node environments, enable cluster-wide transactions.");
+                    throw new Exception($"The configured database is replicated across multiple nodes, in order to continue, use {nameof(EnableClusterWideTransactions)} on the gateway configuration.");
                 }
             }
         }
