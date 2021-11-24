@@ -9,7 +9,7 @@
         [Test]
         public void Is_should_throw_when_database_is_replicated()
         {
-            Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            Assert.ThrowsAsync<Exception>(async () =>
             {
                 var context = await Scenario.Define<Context>()
                     .WithEndpoint<EndpointWithThreeNodesReplica>()

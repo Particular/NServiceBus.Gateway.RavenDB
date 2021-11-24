@@ -62,7 +62,7 @@
                 // Currently do not support clusters.
                 if (getTopologyCmd.Result.Nodes.Count != 1)
                 {
-                    throw new InvalidOperationException("RavenDB Persistence does not support database groups with multiple database nodes. Only single-node configurations are supported.");
+                    throw new Exception("RavenDB Persistence does not support database groups with multiple database nodes. Only single-node configurations are supported.");
                 }
             }
         }
