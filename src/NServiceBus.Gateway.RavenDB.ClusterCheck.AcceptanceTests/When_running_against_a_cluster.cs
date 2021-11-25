@@ -3,6 +3,7 @@
     using AcceptanceTesting;
     using NUnit.Framework;
     using System;
+    using Configuration.AdvancedExtensibility;
 
     public class When_running_against_a_cluster : NServiceBusAcceptanceTest
     {
@@ -34,7 +35,11 @@
         {
             public EndpointWithThreeNodesReplica()
             {
-                EndpointSetup<GatewayEndpointWithThreeNodesReplica>();
+                EndpointSetup<GatewayEndpointWithThreeNodesReplica>((c, runDescriptor) =>
+                {
+                    var gatewaySettings = c.GetSettings().Get<GatewaySettings>();
+                    gatewaySettings.AddReceiveChannel("http://localhost:25999/SiteA/");
+                });
             }
         }
 
@@ -42,7 +47,11 @@
         {
             public EndpointWithOneNodeReplica()
             {
-                EndpointSetup<GatewayEndpointWithOneNodeReplica>();
+                EndpointSetup<GatewayEndpointWithOneNodeReplica>((c, runDescriptor) =>
+                {
+                    var gatewaySettings = c.GetSettings().Get<GatewaySettings>();
+                    gatewaySettings.AddReceiveChannel("http://localhost:25999/SiteA/");
+                });
             }
         }
     }
