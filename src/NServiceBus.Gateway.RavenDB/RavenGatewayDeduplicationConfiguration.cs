@@ -6,6 +6,7 @@
     using Raven.Client.Documents;
     using Raven.Client.Documents.Operations.Expiration;
     using Raven.Client.ServerWide.Commands;
+    using Raven.Client.ServerWide.Operations;
     using Settings;
     using System;
 
@@ -37,10 +38,11 @@
         {
             var documentStore = documentStoreFactory(builder, settings);
 
+            EnsureCompatibleServerVersion(documentStore);
             EnsureClusterConfiguration(documentStore);
             EnableExpirationFeature(documentStore, FrequencyToRunDeduplicationDataCleanup);
 
-            return new RavenGatewayDeduplicationStorage(documentStore, DeduplicationDataTimeToLive);
+            return new RavenGatewayDeduplicationStorage(documentStore, DeduplicationDataTimeToLive, EnableClusterWideTransactions);
         }
 
         static void EnableExpirationFeature(IDocumentStore documentStore, long frequencyToRunDeduplicationDataCleanup)
@@ -52,18 +54,30 @@
             }));
         }
 
-        static void EnsureClusterConfiguration(IDocumentStore store)
+        void EnsureClusterConfiguration(IDocumentStore store)
         {
             using (var s = store.OpenSession())
             {
                 var getTopologyCmd = new GetDatabaseTopologyCommand();
                 s.Advanced.RequestExecutor.Execute(getTopologyCmd, s.Advanced.Context);
 
-                // Currently do not support clusters.
-                if (getTopologyCmd.Result.Nodes.Count != 1)
+                if (getTopologyCmd.Result.Nodes.Count > 1 && !EnableClusterWideTransactions)
                 {
-                    throw new Exception("RavenDB Persistence does not support database groups with multiple database nodes. Only single-node configurations are supported.");
+                    throw new Exception($"The configured database is replicated across multiple nodes, in order to continue, use {nameof(EnableClusterWideTransactions)} on the gateway configuration.");
                 }
+            }
+        }
+
+        void EnsureCompatibleServerVersion(IDocumentStore documentStore)
+        {
+            var requiredVersion = new Version(5, 2);
+            var serverVersion = documentStore.Maintenance.Server.Send(new GetBuildNumberOperation());
+            var fullVersion = new Version(serverVersion.FullVersion);
+
+            if (fullVersion.Major < requiredVersion.Major ||
+                (fullVersion.Major == requiredVersion.Major && fullVersion.Minor < requiredVersion.Minor))
+            {
+                throw new Exception($"We detected that the server is running on version {serverVersion.FullVersion}. RavenDB persistence requires RavenDB server 5.2 or higher");
             }
         }
 
@@ -76,6 +90,12 @@
         /// Frequency, in seconds, at which to run the cleanup of deduplication data.
         /// </summary>
         public long FrequencyToRunDeduplicationDataCleanup { get; set; } = 600;
+
+        /// <summary>
+        /// Enables Cluster-wide transactions support. Cluster-wide transactions must
+        /// be enabled when running against a cluster with more than one node.
+        /// </summary>
+        public bool EnableClusterWideTransactions { get; set; }
 
         ReadOnlySettings settings;
         readonly Func<IBuilder, ReadOnlySettings, IDocumentStore> documentStoreFactory;

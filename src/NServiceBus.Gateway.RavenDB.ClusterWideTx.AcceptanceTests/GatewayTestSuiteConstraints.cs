@@ -20,7 +20,10 @@ namespace NServiceBus.Gateway.AcceptanceTests
                 documentStore.Maintenance.Server.Send(new CreateDatabaseOperation(new DatabaseRecord(databaseName)));
 
                 return documentStore;
-            });
+            })
+            {
+                EnableClusterWideTransactions = true
+            };
 
             var gatewaySettings = configuration.Gateway(ravenGatewayDeduplicationConfiguration);
             configuration.GetSettings().Set(gatewaySettings);
@@ -61,11 +64,11 @@ namespace NServiceBus.Gateway.AcceptanceTests
 
         static DocumentStore GetInitializedDocumentStore(string defaultDatabase)
         {
-            var url = Environment.GetEnvironmentVariable("RavenSingleNodeUrl") ?? "http://localhost:8080";
+            var urls = Environment.GetEnvironmentVariable("CommaSeparatedRavenClusterUrls") ?? "http://localhost:8081,http://localhost:8082,http://localhost:8083";
 
             var documentStore = new DocumentStore
             {
-                Urls = new[] { url },
+                Urls = urls.Split(','),
                 Database = defaultDatabase
             };
 
