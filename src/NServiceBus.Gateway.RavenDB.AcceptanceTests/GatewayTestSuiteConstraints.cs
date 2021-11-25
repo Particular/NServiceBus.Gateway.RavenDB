@@ -61,11 +61,7 @@ namespace NServiceBus.Gateway.AcceptanceTests
 
         static DocumentStore GetInitializedDocumentStore(string defaultDatabase)
         {
-            var url = Environment.GetEnvironmentVariable("RavenSingleNodeUrl");
-            if (url == null)
-            {
-                throw new Exception("RavenDB URL must be specified in an environment variable named RavenSingleNodeUrl.");
-            }
+            var url = Environment.GetEnvironmentVariable("RavenSingleNodeUrl") ?? "http://localhost:8080";
 
             var documentStore = new DocumentStore
             {

@@ -70,7 +70,7 @@
                     // We are using a new store because the global one is disposed of before cleanup
                     using (var storeForDeletion = GetInitializedDocumentStore(databaseName))
                     {
-                        storeForDeletion.Maintenance.Server.Send(new DeleteDatabasesOperation(storeForDeletion.Database, hardDelete: true));
+                        await storeForDeletion.Maintenance.Server.SendAsync(new DeleteDatabasesOperation(storeForDeletion.Database, hardDelete: true));
                         break;
                     }
                 }

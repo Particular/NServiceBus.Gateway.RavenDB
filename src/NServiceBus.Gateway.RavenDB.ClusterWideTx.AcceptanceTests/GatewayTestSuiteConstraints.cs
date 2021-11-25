@@ -64,11 +64,7 @@ namespace NServiceBus.Gateway.AcceptanceTests
 
         static DocumentStore GetInitializedDocumentStore(string defaultDatabase)
         {
-            var urls = Environment.GetEnvironmentVariable("CommaSeparatedRavenClusterUrls");
-            if (urls == null)
-            {
-                throw new Exception("RavenDB cluster URLs must be specified in an environment variable named CommaSeparatedRavenClusterUrls.");
-            }
+            var urls = Environment.GetEnvironmentVariable("CommaSeparatedRavenClusterUrls") ?? "http://localhost:8081,http://localhost:8082,http://localhost:8083";
 
             var documentStore = new DocumentStore
             {
