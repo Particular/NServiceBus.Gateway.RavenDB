@@ -8,7 +8,7 @@
     public class When_running_against_a_cluster : NServiceBusAcceptanceTest
     {
         [Test]
-        public void Is_should_throw_when_database_is_replicated()
+        public void It_should_throw_when_database_is_replicated()
         {
             Assert.ThrowsAsync<Exception>(async () =>
             {
@@ -19,7 +19,7 @@
         }
 
         [Test]
-        public void Is_should_not_throw_when_database_is_not_replicated()
+        public void It_should_not_throw_when_database_is_not_replicated()
         {
             Assert.DoesNotThrowAsync(async () =>
             {
