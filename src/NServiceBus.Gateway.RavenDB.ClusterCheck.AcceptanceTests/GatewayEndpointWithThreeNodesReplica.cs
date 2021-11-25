@@ -9,6 +9,7 @@
         {
             return new DatabaseTopology()
             {
+                ReplicationFactor = 3,
                 Members = new List<string> { "A", "B", "C" }
             };
         }
