@@ -56,15 +56,13 @@
         {
             using (var s = store.OpenSession())
             {
-                var getTopologyCmd = new GetClusterTopologyCommand();
+                var getTopologyCmd = new GetDatabaseTopologyCommand();
                 s.Advanced.RequestExecutor.Execute(getTopologyCmd, s.Advanced.Context);
 
-                var topology = getTopologyCmd.Result.Topology;
-
-                // Currently do not support clusters with more than one possible primary member. Watchers (passive replication targets) are OK.
-                if (topology.Members.Count != 1)
+                // Currently do not support clusters.
+                if (getTopologyCmd.Result.Nodes.Count != 1)
                 {
-                    throw new InvalidOperationException("RavenDB Persistence does not support RavenDB clusters with more than one Leader/Member node. Only clusters with a single Leader and (optionally) Watcher nodes are supported.");
+                    throw new Exception("RavenDB Persistence does not support database groups with multiple database nodes. Only single-node configurations are supported.");
                 }
             }
         }
