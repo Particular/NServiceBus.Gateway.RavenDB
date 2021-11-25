@@ -20,7 +20,7 @@
 
         public async Task<IDeduplicationSession> CheckForDuplicate(string messageId, ContextBag context, CancellationToken cancellationToken = default)
         {
-            var options = new SessionOptions()
+            var options = new SessionOptions
             {
                 TransactionMode = useClusterWideTransactions ? TransactionMode.ClusterWide : TransactionMode.SingleNode
             };
@@ -32,7 +32,7 @@
 
             var isDuplicate = await session.LoadAsync<GatewayMessage>(MessageIdHelper.EscapeMessageId(messageId), cancellationToken).ConfigureAwait(false) != null;
 
-            return new RavenDeduplicationSession(session, isDuplicate, messageId, deduplicationDataTimeToLive);
+            return new RavenDeduplicationSession(session, isDuplicate, messageId, deduplicationDataTimeToLive, useClusterWideTransactions);
         }
 
         readonly IDocumentStore documentStore;
