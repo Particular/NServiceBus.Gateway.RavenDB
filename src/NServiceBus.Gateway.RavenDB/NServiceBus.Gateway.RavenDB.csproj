@@ -14,9 +14,4 @@
     <PackageReference Include="RavenDB.Client" Version="[4.2.0, 5.0.0)" />
   </ItemGroup>
 
-  <ItemGroup>
-    <!-- See https://github.com/GitTools/GitVersion/issues/2838 for further details -->
-    <PackageReference Include="GitVersion.MsBuild" Version="5.8.1" PrivateAssets="None" />
-  </ItemGroup>
-
 </Project>
