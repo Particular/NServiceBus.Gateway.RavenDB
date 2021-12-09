@@ -87,7 +87,10 @@ jobs:
                   try
                   {
                       echo "Trying to connect to $nodeName"
+                      echo $hashTable[$nodeName]
                       $fqdnAndPort = $hashTable[$nodeName].Split(":")
+                      echo $fqdnAndPort[0]
+                      echo $fqdnAndPort[1]
                       $tcpClient.Connect($fqdnAndPort[0], $fqdnAndPort[1])
                       echo "Connection to $nodeName successful"
                   } catch 
