@@ -57,7 +57,7 @@ jobs:
               Write-Debug "Creating RavenDB container $hostname in $region (This can take a while.)"
 
               $containerImage = "ravendb/ravendb:5.3-ubuntu-latest"
-              (Get-Content cluster.yml).replace('__NAME__', $hostname).replace('__REGION__', $region) | Set-Content cluster.replace.yml
+              $replace = (Get-Content cluster.yml).replace('__NAME__', $hostname).replace('__REGION__', $region) | Set-Content cluster.replace.yml
               $details = az container create --resource-group GitHubActions-RG --file cluster.replace.yml | ConvertFrom-Json
               
               # echo will mess up the return value
