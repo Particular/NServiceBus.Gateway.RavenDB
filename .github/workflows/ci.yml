@@ -20,6 +20,11 @@ jobs:
     outputs:
       prefix: ${{ steps.setup-ravendb.outputs.prefix }}
     steps:
+      - name: Checkout
+        if: github.event_name != 'pull_request_target'
+        uses: actions/checkout@v2.4.0
+        with:
+          fetch-depth: 0
       - name: Check for secrets
         env:
           SECRETS_AVAILABLE: ${{ secrets.SECRETS_AVAILABLE }}
