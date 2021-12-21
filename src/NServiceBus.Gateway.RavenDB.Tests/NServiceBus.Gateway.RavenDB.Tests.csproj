@@ -16,7 +16,7 @@
     <PackageReference Include="NServiceBus.Gateway" Version="4.0.0-alpha.247" />
     <PackageReference Include="Particular.Approvals" Version="0.3.0" />
     <PackageReference Include="PublicApiGenerator" Version="10.2.0" />
-    <PackageReference Include="RavenDB.Client" Version="5.3.0" />
+    <PackageReference Include="RavenDB.Client" Version="5.3.1" />
   </ItemGroup>
 
   <ItemGroup>
