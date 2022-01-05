@@ -26,7 +26,7 @@ jobs:
         shell: pwsh
         run: exit $(If ($env:SECRETS_AVAILABLE -eq 'true') { 0 } Else { 1 })    
       - name: Azure login
-        uses: azure/login@v1.4.1
+        uses: azure/login@v1.4.2
         with:
           creds: ${{ secrets.AZURE_ACI_CREDENTIALS }}
           enable-AzPSSession: true
@@ -94,7 +94,7 @@ jobs:
                       echo "Connection to $nodeName successful"
                   } catch 
                   {
-                      if($startDate.AddMinutes(2) -lt (Get-Date)) 
+                      if($startDate.AddMinutes(3) -lt (Get-Date)) 
                       {
                         throw "Unable to connect to $nodeName"
                       }
@@ -155,12 +155,12 @@ jobs:
     steps:
       - name: Checkout
         if: github.event_name != 'pull_request_target'
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
         with:
           fetch-depth: 0
       - name: Checkout for Dependabot
         if: github.event_name == 'pull_request_target'
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.4.0
         with:
           ref: 'refs/pull/${{ github.event.number }}/merge'
           fetch-depth: 0
@@ -169,7 +169,7 @@ jobs:
         with:
           dotnet-version: |
             6.0.x
-            3.1.x  
+            3.1.x 
       - name: Build
         run: dotnet build src --configuration Release
       - name: Upload packages
