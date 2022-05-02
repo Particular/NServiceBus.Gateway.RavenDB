@@ -1,18 +1,18 @@
-﻿using NServiceBus.AcceptanceTesting.Support;
-using NServiceBus.Configuration.AdvancedExtensibility;
-using Raven.Client.Documents;
-using Raven.Client.ServerWide;
-using Raven.Client.ServerWide.Operations;
-using System;
-using System.Threading.Tasks;
-
-namespace NServiceBus.Gateway.AcceptanceTests
+﻿namespace NServiceBus.Gateway.AcceptanceTests
 {
+    using System;
+    using System.Threading.Tasks;
+    using NServiceBus.AcceptanceTesting.Support;
+    using NServiceBus.Configuration.AdvancedExtensibility;
+    using Raven.Client.Documents;
+    using Raven.Client.ServerWide;
+    using Raven.Client.ServerWide.Operations;
+
     public partial class GatewayTestSuiteConstraints
     {
         public Task ConfigureDeduplicationStorage(string endpointName, EndpointConfiguration configuration, RunSettings settings)
         {
-            var ravenGatewayDeduplicationConfiguration = new RavenGatewayDeduplicationConfiguration((builder, _) => 
+            var ravenGatewayDeduplicationConfiguration = new RavenGatewayDeduplicationConfiguration((builder, _) =>
             {
                 databaseName = Guid.NewGuid().ToString();
                 var documentStore = GetInitializedDocumentStore(databaseName);

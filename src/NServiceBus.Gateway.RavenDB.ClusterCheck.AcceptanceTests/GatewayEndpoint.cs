@@ -1,5 +1,8 @@
 ﻿namespace NServiceBus.Gateway.AcceptanceTests
 {
+    using System;
+    using System.IO;
+    using System.Threading.Tasks;
     using AcceptanceTesting.Support;
     using NServiceBus.AcceptanceTesting.Customization;
     using NServiceBus.Configuration.AdvancedExtensibility;
@@ -7,9 +10,6 @@
     using Raven.Client.Documents;
     using Raven.Client.ServerWide;
     using Raven.Client.ServerWide.Operations;
-    using System;
-    using System.IO;
-    using System.Threading.Tasks;
 
     public abstract class GatewayEndpoint : IEndpointSetupTemplate
     {
@@ -37,8 +37,10 @@
                 databaseName = Guid.NewGuid().ToString();
                 var documentStore = GetInitializedDocumentStore(databaseName);
 
-                var databaseRecord = new DatabaseRecord(databaseName);
-                databaseRecord.Topology = GetDatabaseTopology();
+                var databaseRecord = new DatabaseRecord(databaseName)
+                {
+                    Topology = GetDatabaseTopology()
+                };
 
                 documentStore.Maintenance.Server.Send(new CreateDatabaseOperation(databaseRecord));
 
