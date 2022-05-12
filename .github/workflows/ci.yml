@@ -5,16 +5,11 @@ on:
       - master
       - release-*
   pull_request:
-  pull_request_target:
   workflow_dispatch:
 env:
   DOTNET_NOLOGO: true
 jobs:
   setup:
-    if:
-      (github.event_name == 'pull_request_target' && github.event.pull_request.user.login == 'dependabot[bot]') ||
-      (github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]') ||
-      github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     name: Setup RavenDB Nodes
     runs-on: ubuntu-20.04
     outputs:
@@ -115,7 +110,7 @@ jobs:
           curl "http://$($fqdnRavenDB['leader']):8080/admin/license/activate" -H 'Content-Type: application/json; charset=UTF-8' -d "$($license)"
 
           curl "http://$($fqdnRavenDB['leader']):8080/admin/license/set-limit?nodeTag=A&newAssignedCores=1" -X POST -H 'Content-Type: application/json; charset=utf-8' -H 'Content-Length: 0'
-          $encodedURL = [System.Web.HttpUtility]::UrlEncode("http://$($fqdnRavenDB['follower1']):8080") 
+          $encodedURL = [System.Web.HttpUtility]::UrlEncode("http://$($fqdnRavenDB['follower1']):8080")
           curl "http://$($fqdnRavenDB['leader']):8080/admin/cluster/node?url=$($encodedURL)&tag=B&watcher=true&assignedCores=1" -X PUT -H 'Content-Type: application/json; charset=utf-8' -H 'Content-Length: 0'
           $encodedURL = [System.Web.HttpUtility]::UrlEncode("http://$($fqdnRavenDB['follower2']):8080")
           curl "http://$($fqdnRavenDB['leader']):8080/admin/cluster/node?url=$($encodedURL)&tag=C&watcher=true&assignedCores=1" -X PUT -H 'Content-Type: application/json; charset=utf-8' -H 'Content-Length: 0'
@@ -155,15 +150,8 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout
-        if: github.event_name != 'pull_request_target'
         uses: actions/checkout@v2.4.0
         with:
-          fetch-depth: 0
-      - name: Checkout for Dependabot
-        if: github.event_name == 'pull_request_target'
-        uses: actions/checkout@v2.4.0
-        with:
-          ref: 'refs/pull/${{ github.event.number }}/merge'
           fetch-depth: 0
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v2
