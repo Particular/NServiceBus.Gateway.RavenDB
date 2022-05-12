@@ -24,7 +24,7 @@ jobs:
         env:
           SECRETS_AVAILABLE: ${{ secrets.SECRETS_AVAILABLE }}
         shell: pwsh
-        run: exit $(If ($env:SECRETS_AVAILABLE -eq 'true') { 0 } Else { 1 })    
+        run: exit $(If ($env:SECRETS_AVAILABLE -eq 'true') { 0 } Else { 1 })
       - name: Azure login
         uses: azure/login@v1.4.3
         with:
@@ -54,7 +54,7 @@ jobs:
 
               $containerImage = "ravendb/ravendb:5.3-ubuntu-latest"
               $details = az container create --image $containerImage --name $hostname --location $region --dns-name-label $hostname --resource-group GitHubActions-RG --cpu 4 --memory 8 --ports 8080 38888 --ip-address public --environment-variables RAVEN_ARGS="--License.Eula.Accepted=true --Setup.Mode=None --Security.UnsecuredAccessAllowed=PublicNetwork --ServerUrl=http://0.0.0.0:8080 --PublicServerUrl=http://$($hostname).$($region).azurecontainer.io:8080 --ServerUrl.Tcp=tcp://0.0.0.0:38888 --PublicServerUrl.Tcp=tcp://$($hostname).$($region).azurecontainer.io:38888" | ConvertFrom-Json
-              
+
               # echo will mess up the return value
               Write-Debug "Tagging container image"
               $dateTag = "Created=$(Get-Date -Format "yyyy-MM-dd")"
@@ -93,9 +93,9 @@ jobs:
                       echo "Trying to connect to $nodeName"
                       $tcpClient.Connect($hashTable[$nodeName], 8080)
                       echo "Connection to $nodeName successful"
-                  } catch 
+                  } catch
                   {
-                      if($startDate.AddMinutes(3) -lt (Get-Date)) 
+                      if($startDate.AddMinutes(3) -lt (Get-Date))
                       {
                         throw "Unable to connect to $nodeName"
                       }
@@ -168,9 +168,7 @@ jobs:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: |
-            6.0.x
-            3.1.x
+          dotnet-version: 6.0.x
       - name: Build
         run: dotnet build src --configuration Release
       - name: Upload packages
