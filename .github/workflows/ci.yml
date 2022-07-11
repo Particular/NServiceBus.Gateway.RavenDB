@@ -21,7 +21,7 @@ jobs:
         shell: pwsh
         run: exit $(If ($env:SECRETS_AVAILABLE -eq 'true') { 0 } Else { 1 })
       - name: Azure login
-        uses: azure/login@v1.4.3
+        uses: azure/login@v1.4.5
         with:
           creds: ${{ secrets.AZURE_ACI_CREDENTIALS }}
           enable-AzPSSession: true
@@ -196,7 +196,7 @@ jobs:
     steps:
       - name: Azure login
         if: ${{ needs.setup.outputs.prefix != '' }}
-        uses: azure/login@v1.4.3
+        uses: azure/login@v1.4.5
         with:
           creds: ${{ secrets.AZURE_ACI_CREDENTIALS }}
           enable-AzPSSession: true
