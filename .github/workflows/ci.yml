@@ -11,10 +11,6 @@ env:
   DOTNET_NOLOGO: true
 jobs:
   setup:
-    if:
-      (github.event_name == 'pull_request_target' && github.event.pull_request.user.login == 'dependabot[bot]') ||
-      (github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]') ||
-      github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     name: Setup RavenDB Nodes
     runs-on: ubuntu-20.04
     outputs:
@@ -24,9 +20,9 @@ jobs:
         env:
           SECRETS_AVAILABLE: ${{ secrets.SECRETS_AVAILABLE }}
         shell: pwsh
-        run: exit $(If ($env:SECRETS_AVAILABLE -eq 'true') { 0 } Else { 1 })    
+        run: exit $(If ($env:SECRETS_AVAILABLE -eq 'true') { 0 } Else { 1 })
       - name: Azure login
-        uses: azure/login@v1.4.1
+        uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_ACI_CREDENTIALS }}
           enable-AzPSSession: true
@@ -132,7 +128,7 @@ jobs:
           echo ${{ steps.setup-ravendb.outputs.singlenodeurl }} | gpg --quiet --symmetric --cipher-algo AES256 --batch --yes --passphrase '${{ secrets.PASSPHRASE }}' --output singlenodeurl.txt.gpg
           echo ${{ steps.setup-ravendb.outputs.clusterurl }} | gpg --quiet --symmetric --cipher-algo AES256 --batch --yes --passphrase '${{ secrets.PASSPHRASE }}' --output clusterurl.txt.gpg
       - name: Upload Urls
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3.1.0
         with:
           name: ravendburls
           path: |
@@ -154,18 +150,16 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout
-        if: github.event_name != 'pull_request_target'
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v3.0.2
         with:
           fetch-depth: 0
       - name: Checkout for Dependabot
-        if: github.event_name == 'pull_request_target'
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v3.0.2
         with:
           ref: 'refs/pull/${{ github.event.number }}/merge'
           fetch-depth: 0
       - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v1.9.0
+        uses: actions/setup-dotnet@v2.1.0
         with:
           dotnet-version: |
             6.0.x
@@ -174,13 +168,13 @@ jobs:
         run: dotnet build src --configuration Release
       - name: Upload packages
         if: matrix.name == 'Windows'
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v3.1.0
         with:
           name: NuGet packages
           path: nugets/
           retention-days: 7
       - name: Download Urls
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3.0.0
         with:
           name: ravendburls
       - name: Prepare for tests
@@ -200,7 +194,7 @@ jobs:
         env:
           RavenSingleNodeUrl: ${{ steps.prepare.outputs.singlenodeurl }}
           CommaSeparatedRavenClusterUrls: ${{ steps.prepare.outputs.clusterurl }}
-        uses: Particular/run-tests-action@v1.0.0
+        uses: Particular/run-tests-action@v1.3.0
 
   cleanup:
     runs-on: ubuntu-20.04
@@ -209,7 +203,7 @@ jobs:
     steps:
       - name: Azure login
         if: ${{ needs.setup.outputs.prefix != '' }}
-        uses: azure/login@v1.4.1
+        uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_ACI_CREDENTIALS }}
           enable-AzPSSession: true
