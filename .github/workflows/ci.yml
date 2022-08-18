@@ -11,10 +11,6 @@ env:
   DOTNET_NOLOGO: true
 jobs:
   setup:
-    if:
-      (github.event_name == 'pull_request_target' && github.event.pull_request.user.login == 'dependabot[bot]') ||
-      (github.event_name == 'pull_request' && github.event.pull_request.user.login != 'dependabot[bot]') ||
-      github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     name: Setup RavenDB Nodes
     runs-on: ubuntu-20.04
     outputs:
@@ -24,9 +20,9 @@ jobs:
         env:
           SECRETS_AVAILABLE: ${{ secrets.SECRETS_AVAILABLE }}
         shell: pwsh
-        run: exit $(If ($env:SECRETS_AVAILABLE -eq 'true') { 0 } Else { 1 })    
+        run: exit $(If ($env:SECRETS_AVAILABLE -eq 'true') { 0 } Else { 1 })
       - name: Azure login
-        uses: azure/login@v1.4.2
+        uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_ACI_CREDENTIALS }}
           enable-AzPSSession: true
@@ -53,7 +49,7 @@ jobs:
               Write-Debug "Creating RavenDB container $hostname in $region (This can take a while.)"
 
               $details = az container create --image ravendb/ravendb:4.2-ubuntu-latest --name $hostname --location $region --dns-name-label $hostname --resource-group GitHubActions-RG --cpu 4 --memory 8 --ports 8080 38888 --ip-address public --environment-variables RAVEN_ServerUrl="http://0.0.0.0:8080" RAVEN_ServerUrl_Tcp="tcp://0.0.0.0:38888" RAVEN_PublicServerUrl="http://$($hostname).$($region).azurecontainer.io:8080" RAVEN_PublicServerUrl_Tcp="tcp://$($hostname).$($region).azurecontainer.io:38888" RAVEN_Setup_Mode="None" RAVEN_License_Eula_Accepted="true" RAVEN_ARGS='--Security.UnsecuredAccessAllowed=PublicNetwork' | ConvertFrom-Json
-              
+
               # echo will mess up the return value
               Write-Debug "Tagging container image"
               $dateTag = "Created=$(Get-Date -Format "yyyy-MM-dd")"
@@ -92,9 +88,9 @@ jobs:
                       echo "Trying to connect to $nodeName"
                       $tcpClient.Connect($hashTable[$nodeName], 8080)
                       echo "Connection to $nodeName successful"
-                  } catch 
+                  } catch
                   {
-                      if($startDate.AddMinutes(3) -lt (Get-Date)) 
+                      if($startDate.AddMinutes(3) -lt (Get-Date))
                       {
                         throw "Unable to connect to $nodeName"
                       }
@@ -114,7 +110,7 @@ jobs:
           curl "http://$($fqdnRavenDB['leader']):8080/admin/license/activate" -H 'Content-Type: application/json; charset=UTF-8' -d "$($license)"
 
           curl "http://$($fqdnRavenDB['leader']):8080/admin/license/set-limit?nodeTag=A&newAssignedCores=1" -X POST -H 'Content-Type: application/json; charset=utf-8' -H 'Content-Length: 0'
-          $encodedURL = [System.Web.HttpUtility]::UrlEncode("http://$($fqdnRavenDB['follower1']):8080") 
+          $encodedURL = [System.Web.HttpUtility]::UrlEncode("http://$($fqdnRavenDB['follower1']):8080")
           curl "http://$($fqdnRavenDB['leader']):8080/admin/cluster/node?url=$($encodedURL)&tag=B&watcher=true&assignedCores=1" -X PUT -H 'Content-Type: application/json; charset=utf-8' -H 'Content-Length: 0'
           $encodedURL = [System.Web.HttpUtility]::UrlEncode("http://$($fqdnRavenDB['follower2']):8080")
           curl "http://$($fqdnRavenDB['leader']):8080/admin/cluster/node?url=$($encodedURL)&tag=C&watcher=true&assignedCores=1" -X PUT -H 'Content-Type: application/json; charset=utf-8' -H 'Content-Length: 0'
@@ -132,7 +128,7 @@ jobs:
           echo ${{ steps.setup-ravendb.outputs.singlenodeurl }} | gpg --quiet --symmetric --cipher-algo AES256 --batch --yes --passphrase '${{ secrets.PASSPHRASE }}' --output singlenodeurl.txt.gpg
           echo ${{ steps.setup-ravendb.outputs.clusterurl }} | gpg --quiet --symmetric --cipher-algo AES256 --batch --yes --passphrase '${{ secrets.PASSPHRASE }}' --output clusterurl.txt.gpg
       - name: Upload Urls
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3.1.0
         with:
           name: ravendburls
           path: |
@@ -154,33 +150,31 @@ jobs:
       fail-fast: false
     steps:
       - name: Checkout
-        if: github.event_name != 'pull_request_target'
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3.0.2
         with:
           fetch-depth: 0
       - name: Checkout for Dependabot
-        if: github.event_name == 'pull_request_target'
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3.0.2
         with:
           ref: 'refs/pull/${{ github.event.number }}/merge'
           fetch-depth: 0
       - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v1.9.0
+        uses: actions/setup-dotnet@v2.1.0
         with:
           dotnet-version: |
             6.0.x
-            3.1.x 
+            3.1.x
       - name: Build
         run: dotnet build src --configuration Release
       - name: Upload packages
         if: matrix.name == 'Windows'
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v3.1.0
         with:
           name: NuGet packages
           path: nugets/
           retention-days: 7
       - name: Download Urls
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3.0.0
         with:
           name: ravendburls
       - name: Prepare for tests
@@ -200,7 +194,7 @@ jobs:
         env:
           RavenSingleNodeUrl: ${{ steps.prepare.outputs.singlenodeurl }}
           CommaSeparatedRavenClusterUrls: ${{ steps.prepare.outputs.clusterurl }}
-        uses: Particular/run-tests-action@v1.0.0
+        uses: Particular/run-tests-action@v1.3.0
 
   cleanup:
     runs-on: ubuntu-20.04
@@ -209,7 +203,7 @@ jobs:
     steps:
       - name: Azure login
         if: ${{ needs.setup.outputs.prefix != '' }}
-        uses: azure/login@v1.4.1
+        uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_ACI_CREDENTIALS }}
           enable-AzPSSession: true
