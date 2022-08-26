@@ -46,7 +46,7 @@ jobs:
         with:
           single-connection-string-name: RavenSingleNodeUrl
           cluster-connection-string-name: CommaSeparatedRavenClusterUrls
-          ravendb-license: ${{ secrets.RAVEN_LICENSE }}
+          ravendb-license: ${{ secrets.RAVENDB_LICENSE }}
       - name: Upload packages
         if: matrix.name == 'Windows'
         uses: actions/upload-artifact@v3.1.0
