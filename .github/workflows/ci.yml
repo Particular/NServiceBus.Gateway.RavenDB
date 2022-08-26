@@ -48,6 +48,7 @@ jobs:
           cluster-connection-string-name: CommaSeparatedRavenClusterUrls
           ravendb-license: ${{ secrets.RAVENDB_LICENSE }}
           ravendb-mode: Both
+          tag: RavenDBGateway
       - name: Upload packages
         if: matrix.name == 'Windows'
         uses: actions/upload-artifact@v3.1.0
