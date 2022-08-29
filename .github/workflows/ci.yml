@@ -12,7 +12,6 @@ jobs:
   build:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
-    needs: setup
     strategy:
       matrix:
         include:
