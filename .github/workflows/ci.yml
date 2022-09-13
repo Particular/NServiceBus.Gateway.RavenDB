@@ -40,7 +40,7 @@ jobs:
         run: dotnet build src --configuration Release
       - name: Azure login
         uses: azure/login@v1.4.5
-        if: matrix name == 'Windows'
+        if: matrix.name == 'Windows'
         with:
           creds: ${{ secrets.AZURE_ACI_CREDENTIALS }}
       - name: Setup RavenDB
