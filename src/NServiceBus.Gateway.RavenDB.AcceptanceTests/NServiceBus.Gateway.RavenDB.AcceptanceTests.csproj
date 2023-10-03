@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NServiceBus.AcceptanceTesting" Version="9.0.0-alpha.4" />
+    <PackageReference Include="NServiceBus.AcceptanceTesting" Version="9.0.0-alpha.7" />
     <PackageReference Include="NServiceBus.Gateway.AcceptanceTests.Sources" Version="5.0.0-alpha.1" />
     <PackageReference Include="RavenDB.Client" Version="5.4.110" />
   </ItemGroup>
