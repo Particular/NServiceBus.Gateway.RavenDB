@@ -115,6 +115,6 @@
         }
 
         static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
-        List<string> databases = new List<string>();
+        List<string> databases = [];
     }
 }
