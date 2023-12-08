@@ -4,7 +4,7 @@ NServiceBus.Gateway.RavenDB is the [NServiceBus](https://github.com/Particular/N
 
 It is part of the [Particular Service Platform](https://particular.net/service-platform), which includes [NServiceBus](https://particular.net/nservicebus) and tools to build, monitor, and debug distributed systems. 
 
-**For more details, see the [RavenDB Gateway Storage documentation](https://docs.particular.net/nservicebus/gateway/ravendb/).**
+For more details, see the [RavenDB Gateway Storage documentation](https://docs.particular.net/nservicebus/gateway/ravendb/).
 
 ## Running tests locally
 
