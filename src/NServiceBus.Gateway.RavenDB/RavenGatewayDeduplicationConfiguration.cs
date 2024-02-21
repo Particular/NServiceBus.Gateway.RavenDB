@@ -19,7 +19,7 @@
         /// </summary>
         public RavenGatewayDeduplicationConfiguration(Func<IServiceProvider, IReadOnlySettings, IDocumentStore> documentStoreFactory)
         {
-            Guard.AgainstNull(nameof(documentStoreFactory), documentStoreFactory);
+            ArgumentNullException.ThrowIfNull(documentStoreFactory);
 
             this.documentStoreFactory = documentStoreFactory;
         }
