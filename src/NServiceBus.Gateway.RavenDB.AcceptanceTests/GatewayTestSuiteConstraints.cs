@@ -97,11 +97,7 @@
 
         static DocumentStore GetInitializedDocumentStore(string defaultDatabase)
         {
-            var url = Environment.GetEnvironmentVariable("RavenSingleNodeUrl");
-            if (url == null)
-            {
-                throw new Exception("RavenDB URL must be specified in an environment variable named RavenSingleNodeUrl.");
-            }
+            var url = Environment.GetEnvironmentVariable("RavenSingleNodeUrl") ?? throw new Exception("RavenDB URL must be specified in an environment variable named RavenSingleNodeUrl.");
 
             var documentStore = new DocumentStore
             {

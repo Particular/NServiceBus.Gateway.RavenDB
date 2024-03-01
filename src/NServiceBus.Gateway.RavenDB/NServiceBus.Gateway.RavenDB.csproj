@@ -3,14 +3,17 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(SolutionDir)NServiceBus.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\NServiceBus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NServiceBus" Version="9.0.0-alpha.4" />
-    <PackageReference Include="NServiceBus.Gateway" Version="5.0.0-alpha.1" />
+    <PackageReference Include="NServiceBus" Version="[9.0.0, 10.0.0)" />
+    <PackageReference Include="NServiceBus.Gateway" Version="[5.0.0, 6.0.0)" />
+    <PackageReference Include="RavenDB.Client" Version="[5.4.116, 6.0.0)" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Particular.Packaging" Version="4.1.0" PrivateAssets="All" />
-    <PackageReference Include="RavenDB.Client" Version="[5.4.102, 6.0.0)" />
   </ItemGroup>
 
 </Project>
