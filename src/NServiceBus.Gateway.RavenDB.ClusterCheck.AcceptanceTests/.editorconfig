@@ -3,3 +3,6 @@
 
 # CA2007: Consider calling ConfigureAwait on the awaited task
 dotnet_diagnostic.CA2007.severity = suggestion
+
+# IDE0028: Simplify collection initialization
+ dotnet_diagnostic.IDE0028.severity = suggestion 
