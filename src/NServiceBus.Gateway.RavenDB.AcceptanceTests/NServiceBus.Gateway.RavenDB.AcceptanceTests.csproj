@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NServiceBus.AcceptanceTesting" Version="9.2.2" />
+    <PackageReference Include="NServiceBus.AcceptanceTesting" Version="9.2.3" />
     <PackageReference Include="NServiceBus.Gateway.AcceptanceTests.Sources" Version="5.1.0" />
     <PackageReference Include="RavenDB.Client" Version="5.4.116" />
   </ItemGroup>
