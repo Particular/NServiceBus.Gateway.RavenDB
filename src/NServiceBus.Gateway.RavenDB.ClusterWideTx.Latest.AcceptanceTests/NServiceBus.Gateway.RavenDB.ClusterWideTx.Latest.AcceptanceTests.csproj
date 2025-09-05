@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NServiceBus.Gateway.RavenDB\NServiceBus.Gateway.RavenDB.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GitHubActionsTestLogger" Version="2.4.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="NUnit" Version="4.4.0" />
+    <PackageReference Include="NUnit.Analyzers" Version="4.10.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="5.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- We are pulling in latest here to ensure we are testing against the latest RavenDB.Client -->
+    <PackageReference Include="RavenDB.Client" Version="7.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NServiceBus.AcceptanceTesting" Version="10.0.0-alpha.4" />
+    <PackageReference Include="NServiceBus.Gateway.AcceptanceTests.Sources" Version="6.0.0-alpha.2" />
+  </ItemGroup>
+
+</Project>
