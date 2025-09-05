@@ -13,9 +13,9 @@
 
   <ItemGroup>
     <!-- We are keeping this deliberately open to the currently supported versions (LTS and STS) according to the
-            guidance we received from RavenDB they should rarely ever introduce breaking changes. Should it ever
-            happend we can always lock it down to a specific version and release another minor starting from the
-            version that introduced the breaking change.
+         guidance we received from RavenDB they should rarely ever introduce breaking changes. Should it ever
+         happend we can always lock it down to a specific version and release another minor starting from the
+         version that introduced the breaking change.
     -->
     <PackageReference Include="RavenDB.Client" Version="[6.2.9,8.0.0)" AutomaticVersionRange="false" />
   </ItemGroup>
