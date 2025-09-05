@@ -9,7 +9,8 @@
   <ItemGroup>
     <PackageReference Include="NServiceBus" Version="9.2.7" />
     <PackageReference Include="NServiceBus.Gateway" Version="5.1.0" />
-    <PackageReference Include="RavenDB.Client" Version="6.2.9" />
+    <PackageReference Include="RavenDB.Client" Version="[6.2.9,8.0.0)" AutomaticVersionRange="false" />
+
   </ItemGroup>
 
   <ItemGroup>
