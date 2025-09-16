@@ -8,8 +8,8 @@
   <Folder Name="/Tests/">
     <Project Path="NServiceBus.Gateway.RavenDB.AcceptanceTests/NServiceBus.Gateway.RavenDB.AcceptanceTests.csproj" />
     <Project Path="NServiceBus.Gateway.RavenDB.ClusterWideTx.AcceptanceTests/NServiceBus.Gateway.RavenDB.ClusterWideTx.AcceptanceTests.csproj" />
-    <Project Path="NServiceBus.Gateway.RavenDB.Latest.AcceptanceTests\NServiceBus.Gateway.RavenDB.Latest.AcceptanceTests.csproj" Type="Classic C#" />
-    <Project Path="NServiceBus.Gateway.RavenDB.ClusterWideTx.Latest.AcceptanceTests\NServiceBus.Gateway.RavenDB.ClusterWideTx.Latest.AcceptanceTests.csproj" Type="Classic C#" />
+    <Project Path="NServiceBus.Gateway.RavenDB.Latest.AcceptanceTests\NServiceBus.Gateway.RavenDB.Latest.AcceptanceTests.csproj" />
+    <Project Path="NServiceBus.Gateway.RavenDB.ClusterWideTx.Latest.AcceptanceTests\NServiceBus.Gateway.RavenDB.ClusterWideTx.Latest.AcceptanceTests.csproj" />
     <Project Path="NServiceBus.Gateway.RavenDB.Tests/NServiceBus.Gateway.RavenDB.Tests.csproj" />
   </Folder>
   <Project Path="NServiceBus.Gateway.RavenDB/NServiceBus.Gateway.RavenDB.csproj" />
