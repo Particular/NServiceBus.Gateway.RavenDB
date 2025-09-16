@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path="../.github/renovate.json5" />
     <File Path="../.github/workflows/ci.yml" />
     <File Path="../.github/workflows/release.yml" />
     <File Path="Custom.Build.props" />
@@ -7,9 +8,11 @@
   <Folder Name="/Tests/">
     <Project Path="NServiceBus.Gateway.RavenDB.AcceptanceTests/NServiceBus.Gateway.RavenDB.AcceptanceTests.csproj" />
     <Project Path="NServiceBus.Gateway.RavenDB.ClusterWideTx.AcceptanceTests/NServiceBus.Gateway.RavenDB.ClusterWideTx.AcceptanceTests.csproj" />
-    <Project Path="NServiceBus.Gateway.RavenDB.Latest.AcceptanceTests\NServiceBus.Gateway.RavenDB.Latest.AcceptanceTests.csproj" Type="Classic C#" />
-    <Project Path="NServiceBus.Gateway.RavenDB.ClusterWideTx.Latest.AcceptanceTests\NServiceBus.Gateway.RavenDB.ClusterWideTx.Latest.AcceptanceTests.csproj" Type="Classic C#" />
     <Project Path="NServiceBus.Gateway.RavenDB.Tests/NServiceBus.Gateway.RavenDB.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Tests/LatestClient/">
+    <Project Path="NServiceBus.Gateway.RavenDB.ClusterWideTx.Latest.AcceptanceTests\NServiceBus.Gateway.RavenDB.ClusterWideTx.Latest.AcceptanceTests.csproj" />
+    <Project Path="NServiceBus.Gateway.RavenDB.Latest.AcceptanceTests\NServiceBus.Gateway.RavenDB.Latest.AcceptanceTests.csproj" />
   </Folder>
   <Project Path="NServiceBus.Gateway.RavenDB/NServiceBus.Gateway.RavenDB.csproj" />
 </Solution>
