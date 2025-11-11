@@ -6,7 +6,6 @@ namespace NServiceBus
         public System.TimeSpan DeduplicationDataTimeToLive { get; set; }
         public bool EnableClusterWideTransactions { get; set; }
         public long FrequencyToRunDeduplicationDataCleanup { get; set; }
-        public override NServiceBus.Gateway.IGatewayDeduplicationStorage CreateStorage(System.IServiceProvider builder) { }
-        public override void Setup(NServiceBus.Settings.IReadOnlySettings settings) { }
+        protected override void EnableFeature(NServiceBus.Settings.SettingsHolder settings) { }
     }
 }

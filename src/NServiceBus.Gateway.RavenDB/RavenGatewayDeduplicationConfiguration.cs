@@ -7,6 +7,8 @@
     using Raven.Client.ServerWide.Commands;
     using Settings;
     using System;
+    using Features;
+    using Microsoft.Extensions.DependencyInjection;
     using Raven.Client.ServerWide.Operations;
 
     /// <summary>
@@ -22,62 +24,6 @@
             ArgumentNullException.ThrowIfNull(documentStoreFactory);
 
             this.documentStoreFactory = documentStoreFactory;
-        }
-
-        /// <inheritdoc />
-        public override void Setup(IReadOnlySettings settings)
-        {
-            this.settings = settings;
-
-            base.Setup(settings);
-        }
-
-        /// <inheritdoc />
-        public override IGatewayDeduplicationStorage CreateStorage(IServiceProvider builder)
-        {
-            var documentStore = documentStoreFactory(builder, settings);
-
-            EnsureCompatibleServerVersion(documentStore);
-            EnsureClusterConfiguration(documentStore);
-            EnableExpirationFeature(documentStore, FrequencyToRunDeduplicationDataCleanup);
-
-            return new RavenGatewayDeduplicationStorage(documentStore, DeduplicationDataTimeToLive, EnableClusterWideTransactions);
-        }
-
-        static void EnableExpirationFeature(IDocumentStore documentStore, long frequencyToRunDeduplicationDataCleanup)
-        {
-            documentStore.Maintenance.Send(new ConfigureExpirationOperation(new ExpirationConfiguration
-            {
-                Disabled = false,
-                DeleteFrequencyInSec = frequencyToRunDeduplicationDataCleanup
-            }));
-        }
-
-        void EnsureClusterConfiguration(IDocumentStore store)
-        {
-            using (var s = store.OpenSession())
-            {
-                var getTopologyCmd = new GetDatabaseTopologyCommand();
-                s.Advanced.RequestExecutor.Execute(getTopologyCmd, s.Advanced.Context);
-
-                if (getTopologyCmd.Result.Nodes.Count > 1 && !EnableClusterWideTransactions)
-                {
-                    throw new InvalidOperationException("The RavenDB cluster contains multiple nodes. To safely operate in multi-node environments, enable cluster-wide transactions.");
-                }
-            }
-        }
-
-        void EnsureCompatibleServerVersion(IDocumentStore documentStore)
-        {
-            var requiredVersion = new Version(5, 2);
-            var serverVersion = documentStore.Maintenance.Server.Send(new GetBuildNumberOperation());
-            var fullVersion = new Version(serverVersion.FullVersion);
-
-            if (fullVersion.Major < requiredVersion.Major ||
-                (fullVersion.Major == requiredVersion.Major && fullVersion.Minor < requiredVersion.Minor))
-            {
-                throw new Exception($"We detected that the server is running on version {serverVersion.FullVersion}. RavenDB persistence requires RavenDB server 5.2 or higher");
-            }
         }
 
         /// <summary>
@@ -96,7 +42,62 @@
         /// </summary>
         public bool EnableClusterWideTransactions { get; set; }
 
-        IReadOnlySettings settings;
+        /// <inheritdoc />
+        protected override void EnableFeature(SettingsHolder settings) => settings.EnableFeature<RavenGatewayDeduplication>();
+
         readonly Func<IServiceProvider, IReadOnlySettings, IDocumentStore> documentStoreFactory;
+
+        class RavenGatewayDeduplication : Feature
+        {
+            protected override void Setup(FeatureConfigurationContext context)
+            {
+                var configuration = context.Settings.Get<RavenGatewayDeduplicationConfiguration>();
+
+                context.Services.AddSingleton<IGatewayDeduplicationStorage>(sp =>
+                {
+                    var documentStore = configuration.documentStoreFactory(sp, sp.GetRequiredService<IReadOnlySettings>());
+
+                    EnsureCompatibleServerVersion(documentStore);
+                    EnsureClusterConfiguration(documentStore, configuration.EnableClusterWideTransactions);
+                    EnableExpirationFeature(documentStore, configuration.FrequencyToRunDeduplicationDataCleanup);
+
+                    return new RavenGatewayDeduplicationStorage(documentStore, configuration.DeduplicationDataTimeToLive, configuration.EnableClusterWideTransactions);
+                });
+            }
+
+            static void EnableExpirationFeature(IDocumentStore documentStore, long frequencyToRunDeduplicationDataCleanup)
+            {
+                documentStore.Maintenance.Send(new ConfigureExpirationOperation(new ExpirationConfiguration
+                {
+                    Disabled = false,
+                    DeleteFrequencyInSec = frequencyToRunDeduplicationDataCleanup
+                }));
+            }
+
+            static void EnsureClusterConfiguration(IDocumentStore store, bool clusterWideTransactionsEnabled)
+            {
+                using var s = store.OpenSession();
+                var getTopologyCmd = new GetDatabaseTopologyCommand();
+                s.Advanced.RequestExecutor.Execute(getTopologyCmd, s.Advanced.Context);
+
+                if (getTopologyCmd.Result.Nodes.Count > 1 && !clusterWideTransactionsEnabled)
+                {
+                    throw new InvalidOperationException("The RavenDB cluster contains multiple nodes. To safely operate in multi-node environments, enable cluster-wide transactions.");
+                }
+            }
+
+            static void EnsureCompatibleServerVersion(IDocumentStore documentStore)
+            {
+                var requiredVersion = new Version(5, 2);
+                var serverVersion = documentStore.Maintenance.Server.Send(new GetBuildNumberOperation());
+                var fullVersion = new Version(serverVersion.FullVersion);
+
+                if (fullVersion.Major < requiredVersion.Major ||
+                    (fullVersion.Major == requiredVersion.Major && fullVersion.Minor < requiredVersion.Minor))
+                {
+                    throw new Exception($"We detected that the server is running on version {serverVersion.FullVersion}. RavenDB persistence requires RavenDB server 5.2 or higher");
+                }
+            }
+        }
     }
 }
