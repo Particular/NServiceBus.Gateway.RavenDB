@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NServiceBus" Version="10.0.0" />
+    <PackageReference Include="NServiceBus" Version="10.1.0" />
     <PackageReference Include="NServiceBus.Gateway" Version="6.0.0" />
     <PackageReference Include="RavenDB.Client" Version="6.2.13" AutomaticVersionRange="false" />
   </ItemGroup>
