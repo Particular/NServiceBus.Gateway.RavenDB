@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NServiceBus.AcceptanceTesting" Version="10.2.6" />
+    <PackageReference Include="NServiceBus.AcceptanceTesting" Version="10.2.7" />
     <PackageReference Include="NServiceBus.Gateway.AcceptanceTests.Sources" Version="6.1.0" />
   </ItemGroup>
 
